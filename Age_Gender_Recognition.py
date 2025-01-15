@@ -11,9 +11,19 @@ from time import time
 import dlib
 import tensorflow as tf
 
+#=================================================================
+#초기값 설정
+#=================================================================
+#실행 경로 설정 
 # 경로 설정
-script_directory = os.path.dirname(os.path.abspath(__file__))
-os.chdir(script_directory)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+Models_dir = os.path.abspath(os.path.join(script_dir, "../00_Models"))
+Videos_dir = os.path.abspath(os.path.join(script_dir, "../00_Sample_Video"))
+
+video_file = os.path.join(Videos_dir, "input","face.mp4" )
+age_model_file  = os.path.join(Models_dir, "weights.28-3.73.hdf5" )
+
 
 # NVIDIA GPU 설정
 gpus = tf.config.list_physical_devices('GPU')
@@ -141,8 +151,7 @@ class WideResNet:
 
 # FaceCV 클래스 정의: 얼굴 검출 및 예측
 class FaceCV:
-    #WRN_WEIGHTS_PATH = "../Models/EfficientNetB3_224_weights.11-3.44.hdf5"
-    WRN_WEIGHTS_PATH = "../Models/weights.28-3.73.hdf5"
+    WRN_WEIGHTS_PATH = age_model_file
 
     def __init__(self, depth=16, width=8, face_size=64):
         # WideResNet 모델 초기화
@@ -180,8 +189,8 @@ class FaceCV:
     def detect_face(self):
         # 웹캠에서 얼굴 검출 및 나이, 성별 예측
         
-        #video_capture = cv2.VideoCapture(0)
-        video_capture = cv2.VideoCapture('../Sample_video/input/face.mp4')
+        video_capture = cv2.VideoCapture(0)
+        #video_capture = cv2.VideoCapture(video_file)
         if not video_capture.isOpened():
             raise IOError("Cannot open webcam")
 
